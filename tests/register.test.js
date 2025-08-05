@@ -1,13 +1,13 @@
+jest.mock("../functions/logger", () => ({
+  log: jest.fn(), // мок метода log
+}));
+
 const { registerUser } = require("../functions/register");
-const logger = require("../functions/logger");
+const logger = require("../functions/logger"); // подключаем после mock
 
 describe("registerUser", () => {
   beforeEach(() => {
-    jest.spyOn(logger, "log").mockImplementation(() => {}); // ✅ мок логгера
-  });
-
-  afterEach(() => {
-    jest.restoreAllMocks(); // 🔁 очищает spy после каждого теста
+    jest.clearAllMocks(); // очищает мок после каждого теста
   });
 
   test("логирует при успешной регистрации", () => {
@@ -19,9 +19,9 @@ describe("registerUser", () => {
   });
 
   test("ошибка при некорректном email", () => {
-    const badUser = { name: "Аня", email: "nope" };
+    const badUser = { name: "Аня", email: "invalid" };
 
     expect(() => registerUser(badUser)).toThrow("Некорректный email");
-    expect(logger.log).not.toHaveBeenCalled(); // 💡 убеждаемся, что логгер не вызывался
+    expect(logger.log).not.toHaveBeenCalled();
   });
 });
