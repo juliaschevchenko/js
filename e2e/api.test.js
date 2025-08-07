@@ -1,5 +1,6 @@
 import test, { expect } from "@playwright/test";
 import { describe } from "node:test";
+const validatePostData = require("../functions/validate");
 
 describe("Get requests", () => {
   test("get users", async ({ request }) => {
@@ -45,6 +46,30 @@ describe("Post requests", () => {
     const body = await response.json();
     expect(body).toMatchObject(data);
     expect(body).toHaveProperty("id", "body", "userId");
+  });
+
+  test("create new user with invalid data", async ({ request }) => {
+    const data = {
+      body: 1,
+      userId: "1",
+      title: null,
+    };
+    const response = await request.post("/posts", { data: data });
+    expect(response.status()).toBe(201); // нет валидации по типам данных
+    const body = await response.json();
+    expect(body).toMatchObject(data);
+    expect(body).toHaveProperty("id", "body", "userId");
+
+    const result = validatePostData(data);
+
+    const messages = result.errors.map((e) => e.message);
+    expect(messages).toEqual(
+      expect.arrayContaining([
+        "id должен быть числом",
+        "Заголовок должен быть непустой строкой",
+        "Тело должно быть строкой",
+      ])
+    );
   });
 });
 
