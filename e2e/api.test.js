@@ -1,4 +1,4 @@
-import test, { expect } from "@playwright/test";
+import { test, expect } from '@playwright/test';
 import { describe } from "node:test";
 const validatePostData = require("../functions/validate");
 

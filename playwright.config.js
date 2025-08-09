@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig, devices } from "@playwright/test";
 
 /**
  * Read environment variables from file.
@@ -13,7 +13,7 @@ import { defineConfig, devices } from '@playwright/test';
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
-  testDir: 'e2e/',
+  testDir: "e2e/",
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -23,13 +23,13 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    baseURL: 'https://jsonplaceholder.typicode.com',
+    // baseURL: "https://jsonplaceholder.typicode.com",
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    trace: "on-first-retry",
   },
 
   /* Configure projects for major browsers */
@@ -48,9 +48,20 @@ export default defineConfig({
     //   name: 'webkit',
     //   use: { ...devices['Desktop Safari'] },
     // },
-        {
-      name: 'API Tests',
+    {
+      name: "API",
+      testMatch: /.*api.test.js/,
+      use: {
+        baseURL: "https://jsonplaceholder.typicode.com"
+      }
     },
+    {
+      name: "UI",
+      testMatch: /.*ui.test.js/,
+      use: {
+        baseURL: "https://demo.playwright.dev"
+      }
+    }
 
     /* Test against mobile viewports. */
     // {
@@ -80,4 +91,3 @@ export default defineConfig({
   //   reuseExistingServer: !process.env.CI,
   // },
 });
-
